@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="../navigation.css">
+    <link rel="stylesheet" href="index.css">
+    
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div class="logo"> Expense-Tracking Website </div>
+            <div class="menu-btn" onclick="toggleMenu()">☰</div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="../Home/index.html" class="active">Home</a></li>
+                <li><a href="../ExpenseTracker/expense.html">Expense-details</a></li>
+                <li><a href="../SignUp/signup.html">Sign-up</a></li>
+                <li><a href="../LoginPage/login.html">Login</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <script>
+        function toggleMenu() {
+            const navLinks = document.getElementById('navLinks');
+            navLinks.classList.toggle('active');
+        }
+    </script>
+
+    <main>
+        <h1 class="home-heading"> Welcome to the Expense Tracker App </h1>
+        <div class="card-items">
+            <img src="https://www.pushengage.com/wp-content/uploads/2022/02/Best-Website-Welcome-Message-Examples.png" alt="Welcoming image">
+        </div>
+        <div class="card-items">
+            <p class="card-description"> Welcome to our expense tracker website, your easy-to-use tool for managing your money. Whether you're keeping an eye on daily expenses, planning for the future, or just wanting to understand your spending better, we're here to help. Our website combines simple design with powerful features, making it easy for you to track, analyze, and improve your finances. Let us help you take control of your money, make smart choices, and reach your financial goals. Welcome to a simpler path to financial freedom. </p>
+        </div>
+    </main>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.2/axios.min.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>

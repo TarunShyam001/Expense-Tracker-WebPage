@@ -1,24 +1,31 @@
-body {
+main {
     font-family: Arial, sans-serif;
-    background-color:wheat;
-    align-items: center;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
     height: 100vh;
-    margin: 15px;
+    margin: 50px;
 }
 
-#sign-up-form,
-#login-form {
+#sign-up-form {
     background-color: #81f5e9;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 300px;
+    width: 500px;
 }
 
 .form-control {
     margin-bottom: 15px;
     display: flex;
     flex-direction: column;
+}
+
+.heading {
+    color: rgb(237, 5, 5);
+    text-align: center;
+    font-family: 'Times New Roman', Times, serif;
+    font-style: italic;
 }
 
 .form-control label {
@@ -55,7 +62,7 @@ button:hover {
     background-color: #0056b3;
 }
 
-a {
+#switch {
     display: block;
     text-align: center;
     margin-top: 15px;
@@ -78,4 +85,3 @@ a:active {
     color: red;
     margin: 15px;
 }
-

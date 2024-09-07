@@ -6,8 +6,8 @@ const adminController = require('../controllers/users');
 
 const router = express.Router();
 
-router.post('/user/signup', adminController.postAddUsers);
+router.post('/signup', adminController.postAddUsers);
 
-router.post('/user/login', adminController.postAddLogin);
+router.post('/login', adminController.postAddLogin);
 
 module.exports = router;

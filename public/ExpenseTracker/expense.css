@@ -1,0 +1,173 @@
+/* General form styling */
+.expense-form {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto; /* Centers the form horizontally */
+    margin-top: 50px;
+    padding: 20px;
+    background-color: #f0f0f0;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.form-control {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+}
+
+.form-control label {
+    font-size: 14px;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-control input,
+.form-control select,
+.form-control textarea {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+}
+
+.form-control input:focus,
+.form-control select:focus,
+.form-control textarea:focus {
+    border-color: #81f5e9;
+}
+
+.btn {
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #fff;
+    background-color: blue;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+}
+
+.btn:hover {
+    color: blue;
+    background-color: rgb(251, 236, 210);
+}
+
+.heading {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+ul.list-of-items {
+    display: block;
+}
+li.expense-item {
+    display: block;
+}
+
+
+/* Styling the container */
+
+.data-list {
+    width: 100%;
+    max-width: 90%;
+    margin: 20px auto;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Styling the list of items */
+.list-of-items {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Styling each list item */
+.expense-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 15px;
+    margin-bottom: 10px;
+    background-color: rgb(251, 240, 221);
+    border-radius: 5px;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
+}
+
+/* Styling expense title, amount, and category */
+.exp-title {
+    padding: 10px;
+    font-size: 25px;
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: bold;
+    color: rgb(0, 0, 144);
+}
+
+.exp-amount, .exp-category {
+    padding: 8px;
+    font-size: 20px;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-style: oblique;
+    color: rgb(0, 128, 19);
+}
+
+/* Styling the expense details */
+.exp-details {
+    padding: 10px;
+    font-size: 17px;
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: 700;
+    font-style: italic;
+    color: rgb(127, 0, 119);
+    margin-top: 5px;
+    line-height: 1.5;
+}
+
+/* Styling the buttons */
+.edit-btn, .delete-btn {
+    padding: 8px 12px;
+    margin: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+/* Edit button specific styles */
+.edit-btn {
+    background-color: #4caf50;
+    color: white;
+}
+
+.edit-btn:hover {
+    color: #45a049;
+    background-color: white;
+}
+
+/* Delete button specific styles */
+.delete-btn {
+    background-color: #f44336;
+    color: white;
+}
+
+.delete-btn:hover {
+    color: #e53935;
+    background-color: white;
+}
+
+/* Responsive design for mobile */
+@media (max-width: 600px) {
+    .expense-item {
+        flex-direction: column;
+    }
+
+    .exp-title, .exp-amount, .exp-category {
+        text-align: left;
+    }
+}

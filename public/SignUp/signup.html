@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign-up Page</title>
+    <link rel="stylesheet" href="../navigation.css">
+    <link rel="stylesheet" href="signup.css">
+    
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo"> Expense-Tracking Website </div>
+            <div class="menu-btn" onclick="toggleMenu()">☰</div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="../Home/index.html">Home</a></li>
+                <li><a href="../ExpenseTracker/expense.html">Expense-details</a></li>
+                <li><a href="../SignUp/signup.html" class="active">Sign-up</a></li>
+                <li><a href="../LoginPage/login.html">Login</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <script>
+        function toggleMenu() {
+            const navLinks = document.getElementById('navLinks');
+            navLinks.classList.toggle('active');
+        }
+    </script>
+
+    <main>
+        <form id="sign-up-form">
+            <div class="form-control">
+                <h2 class="heading"> Sign-up form </h2>
+            </div>
+            <div class="form-control">
+                <label for="username"> Username : </label>
+                <input type="text" name="username" id="username" placeholder="username">
+            </div>
+            <div class="form-control">
+                <label for="email"> Email-Id : </label>
+                <input type="email" name="email" id="email" placeholder="email-id">
+            </div>
+            <div class="form-control">
+                <label for="password"> Password : </label>
+                <input type="password" name="password" id="password" >
+            </div>
+            <button type="submit"> Sign Up </button>
+            <a href="login.html" id="switch"> Existing User - Login </a>
+            
+            <div id="err">
+                <p id="error"></p>
+            </div>
+        </form>
+    </main>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.2/axios.min.js"></script>
+    <script src="signup.js"></script>
+</body>
+</html>
