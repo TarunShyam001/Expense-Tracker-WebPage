@@ -13,15 +13,14 @@ exports.getExpense = async (req, res) => {
     }
 };
 
-exports.postAddExpense = (req, res) => {
-    const {title, category, amount, details} = req.body;
-    Expense.create({title, category, amount, details})
-    .then(expense => {
+exports.postAddExpense = async (req, res) => {
+    try{
+        const {title, category, amount, details} = req.body;
+        const expense = Expense.create({title, category, amount, details});
         return res.status(200).json(expense);
-    })
-    .catch(err => {
+    } catch(err) {
         return res.status(403).json({success : false, error : err});
-    });
+    }
   };
 
   exports.postDeleteExpense = async (req, res) => {

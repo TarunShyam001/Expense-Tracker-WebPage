@@ -17,6 +17,8 @@ expenseForm.addEventListener('submit', async(event) => {
   
     try{
         const response = await axios.post(`http://localhost:${port}/expense/add-expense`,expenseDetails);
+        console.log(response.data); // Check the structure of the returned data
+
         listOfExpense.push(response.data);
         console.log(listOfExpense);
 
@@ -25,11 +27,9 @@ expenseForm.addEventListener('submit', async(event) => {
         document.getElementById('category').value = "";
         document.getElementById('details').value = "";
 
-        errorMsg.textContent = '';
-
         renderExpense();
     }
-    catch(error){
+    catch(err){
         comsole.log(err);
     }
 });
@@ -62,7 +62,7 @@ async function editExpense(index) {
         console.error('Error posting comment:', error);
     }
   }
-  window.addEventListener('DOMContentLoaded', async function(event) {
+  document.addEventListener('DOMContentLoaded', async function(event) {
     event.preventDefault();
     try {
         const response = await axios.get(`http://localhost:${port}/expense/get-expenses`);
@@ -85,7 +85,7 @@ function renderExpense() {
 
         expenseItem.innerHTML = `
             <h3 class="exp-title">${expense.title}</h3>
-            <h4 class="exp-amount">${expense.amount}</h4>
+            <h4 class="exp-amount">Rs.${expense.amount}/-</h4>
             <h4 class="exp-category">${expense.category}</h4>
             <p class="exp-details">${expense.details}</p>
             <button onclick="editExpense(${index})" class="edit-btn">Edit</button>
