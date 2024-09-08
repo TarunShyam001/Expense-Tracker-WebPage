@@ -12,7 +12,8 @@ const expenseRoutes = require('./routes/expense');
 app.use(express.json());
 app.use(cors());
 
-// Users.hasMany(Expense);
+Users.hasMany(Expense);
+Expense.belongsTo(Users);
 
 app.use('/user', userRoutes);
 app.use('/expense', expenseRoutes);

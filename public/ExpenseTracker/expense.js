@@ -16,7 +16,9 @@ expenseForm.addEventListener('submit', async(event) => {
     }
   
     try{
-        const response = await axios.post(`http://localhost:${port}/expense/add-expense`,expenseDetails);
+        const token = localStorage.getItem('token');
+        const response = await axios.post(`http://localhost:${port}/expense/add-expense`, expenseDetails, { headers : {'Authorization' : token} });
+
         console.log(response.data); // Check the structure of the returned data
 
         listOfExpense.push(response.data);
@@ -65,10 +67,10 @@ async function editExpense(index) {
   document.addEventListener('DOMContentLoaded', async function(event) {
     event.preventDefault();
     try {
-        const response = await axios.get(`http://localhost:${port}/expense/get-expenses`);
+        const token = localStorage.getItem('token');
+        const response = await axios.get(`http://localhost:${port}/expense/get-expenses`, { headers: { 'Authorization': token } });
         listOfExpense = response.data;
-        console.log('Fetched expenses: ', listOfExpense); // Debugging line
-        renderExpense();
+        renderExpense(); // Make sure this is called after successfully fetching expenses
     } catch (error) {
         console.log('Error fetching expenses: ', error);
     }
@@ -76,12 +78,11 @@ async function editExpense(index) {
 
 function renderExpense() {
     const expenseList = document.getElementById("list-of-expenses");
-
     expenseList.innerHTML = ''; // Clear the existing list
-  
+
     listOfExpense.forEach((expense, index) => {
         const expenseItem = document.createElement('li');
-        expenseItem.classList.add('expense-item'); // Correct class application
+        expenseItem.classList.add('expense-item');
 
         expenseItem.innerHTML = `
             <h3 class="exp-title">${expense.title}</h3>
@@ -91,7 +92,6 @@ function renderExpense() {
             <button onclick="editExpense(${index})" class="edit-btn">Edit</button>
             <button onclick="deleteExpense(${index})" class="delete-btn">Delete</button>
         `;
-        
         expenseList.appendChild(expenseItem);
     });
 }

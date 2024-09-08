@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 const sequelize = new Sequelize(
-    'node-complete', // Database name
+    'expense-tracker', // Database schema name
     'root', // Username
     'Manju012@', // Password
     {

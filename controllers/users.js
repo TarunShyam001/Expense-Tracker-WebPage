@@ -2,6 +2,7 @@ const { where } = require('sequelize');
 const Users = require('../models/users');
 const Expense = require('../models/expense');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 function isPasswordValid(str) {
   const pattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z0-9]{8,20}$/; // Alphanumeric with at least one lowercase, one uppercase, one digit
@@ -36,31 +37,30 @@ exports.postAddUsers = async (req, res) => {
   }
 };
 
+function generateAccessToken(id, name) {
+  const secretKey = 'chysde4ths#5s647udumsnkff9823094mflksdmfs$ui#fjkljf';
+  return jwt.sign({ userId : id, userName : name}, secretKey)
+}
 
 exports.postAddLogin = async (req, res) => {
   const { email, password } = req.body; 
   try {
-    const user = await Users.findAll({ where: { email } });
-    if (user.length > 0) {
+    const user = await Users.findOne({ where: { email } });
+    if (user) {
       // Compare the provided password with the hashed password in the database
-      bcrypt.compare(password, user[0].password, (err, response) => {
-        if (err) {
-          console.error('Error during password comparison:', err);
-          return res.status(500).json({ message: 'Server error during password comparison' });
-        }
-
-        if (response) {
-          // If passwords match
-          console.log('Login Successfully');
-          return res.status(200).json({ message: 'Login Successfully' });
-        } else {
-          // If passwords do not match
-          console.log('Incorrect Password');
-          return res.status(401).json({ message: 'Incorrect Password' });
-        }
-      });
+      const match = await bcrypt.compare(password, user.password);
+      if(match) {    // If passwords match
+        console.log('Login Successfully');
+        return res.status(200).json({ 
+          success : true, 
+          message: 'Login Successfully', 
+          token : generateAccessToken(user.id, user.username) 
+        });
+      } else {
+        console.log('Incorrect Password');
+        return res.status(401).json({ message: 'Incorrect Password' });
+      }
     } else {
-      // If no user is found with the provided email
       console.log('User Not Found');
       return res.status(404).json({ message: 'User Not Found' });
     }

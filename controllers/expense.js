@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt');
 
 exports.getExpense = async (req, res) => {
     try {
-        const expenses = await Expense.findAll();
+        const expenses = await Expense.findAll({where : {userId : req.user.id}});
         return res.status(200).json(expenses);
     } catch (err) {
         console.log(err);
@@ -15,8 +15,9 @@ exports.getExpense = async (req, res) => {
 
 exports.postAddExpense = async (req, res) => {
     try{
+        const userId = req.user.id;
         const {title, category, amount, details} = req.body;
-        const expense = Expense.create({title, category, amount, details});
+        const expense = await Expense.create({title, category, amount, details, userId});
         return res.status(200).json(expense);
     } catch(err) {
         return res.status(403).json({success : false, error : err});

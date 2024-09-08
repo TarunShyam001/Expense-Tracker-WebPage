@@ -18,6 +18,8 @@ loginForm.addEventListener('submit', async(event) => {
         document.getElementById('login-password').value = "";
 
         errorMsg.textContent = 'Login-Successfully';
+        alert(response.data.message);
+        localStorage.setItem('token', response.data.token);
         window.location.href = "../ExpenseTracker/expense.html"
     }
     catch(error){
