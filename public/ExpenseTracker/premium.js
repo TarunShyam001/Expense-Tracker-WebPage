@@ -1,6 +1,8 @@
-const premium = document.getElementById('premium');
+const premiumButton = document.getElementById('rzp-button');
 
-premium.addEventListener('submit', async (event) => {
+const port = 3450
+
+premiumButton.addEventListener('click', async (event) => {
     event.preventDefault();  // Prevent default action of the button
     
     try {
