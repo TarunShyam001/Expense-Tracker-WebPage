@@ -39,3 +39,17 @@ exports.postAddExpense = async (req, res) => {
         res.status(500).json({ error: 'Server error' });
     }
 };
+
+// exports.isPremium = async (req, res) => {
+//     try {
+//         const userPrem = req.user.isPremiumUser;
+//         if(userPrem) {
+//             return res.status(200).json({success : true});
+//         }
+//         res.status(201).json({success : false});
+//     }
+//     catch (err) {
+//         console.error('Error in finding premium:', err);
+//         res.status(500).json({ error: 'Server error' });
+//     }
+// }

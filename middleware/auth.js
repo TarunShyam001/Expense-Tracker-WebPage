@@ -1,32 +1,3 @@
-// const jwt = require('jsonwebtoken');
-// const User = require('../models/users');
-
-// const authorization = async (req, res) => {
-//     try{
-//         const token = await req.header('Authorization');
-//         if (!token) {
-//             throw new Error('Token is missing');
-//         }
-//         console.log(token);
-//         const user = jwt.verify(token, 'chysde4ths#5s647udumsnkff9823094mflksdmfs$ui#fjkljf');
-//         console.log(user);
-//         User.findByPk(user.userId).then(user => {
-//             console.log(JSON.stringify(user));
-//             req.user = user;
-//             next();
-//         }).catch(err => {
-//             console.log(`Error : ${err}`);
-//         });
-//     } 
-//     catch (err) {
-//         console.log(`Error : ${err}`);
-//         return res.status(401).json({success : false});
-//     }
-// };
-
-// module.exports = {
-//     authorization
-// };
 
 const jwt = require('jsonwebtoken');
 const User = require('../models/users');

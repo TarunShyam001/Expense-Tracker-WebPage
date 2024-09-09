@@ -36,6 +36,7 @@ expenseForm.addEventListener('submit', async(event) => {
     }
 });
 
+
 async function deleteExpense(index) {
     const expense = listOfExpense[index];
     console.log('Deleting expense with ID: ', expense.id); // For debugging
@@ -43,6 +44,7 @@ async function deleteExpense(index) {
     try {
         await axios.delete(`http://localhost:${port}/expense/delete-expense/${expense.id}`);
         listOfExpense.splice(index, 1);
+
         renderExpense();
     } catch (error) {
         console.error('Error deleting expense:', error);
@@ -61,10 +63,11 @@ async function editExpense(index) {
         renderExpense();
 
     } catch (error) {
-        console.error('Error posting comment:', error);
+        console.error('Error editing expense:', error);
     }
-  }
-  document.addEventListener('DOMContentLoaded', async function(event) {
+}
+
+document.addEventListener('DOMContentLoaded', async function(event) {
     event.preventDefault();
     try {
         const token = localStorage.getItem('token');
@@ -75,6 +78,7 @@ async function editExpense(index) {
         console.log('Error fetching expenses: ', error);
     }
 });
+
 
 function renderExpense() {
     const expenseList = document.getElementById("list-of-expenses");
@@ -95,3 +99,11 @@ function renderExpense() {
         expenseList.appendChild(expenseItem);
     });
 }
+
+
+// const response = await axios.get(`http://localhost:${port}/expense/premium`, { headers: { 'Authorization': token } });
+//         if(response.data) {
+//             premium.style.display = 'none';
+//         } else {
+//             premium.style.display = 'flex'
+//         }

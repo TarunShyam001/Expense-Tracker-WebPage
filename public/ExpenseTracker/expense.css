@@ -161,6 +161,38 @@ li.expense-item {
     background-color: white;
 }
 
+.premium-click {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.premium-head {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 24px;
+    color: #da6969;
+    margin: 20px;
+}
+
+#rzp-button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 20px;
+    font-size: 18px;
+    font-weight: 500;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-style: italic;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#rzp-button:hover {
+    background-color: aqua;
+    color: #45a049;
+}
+
+
 /* Responsive design for mobile */
 @media (max-width: 600px) {
     .expense-item {

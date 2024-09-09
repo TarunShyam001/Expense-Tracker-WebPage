@@ -28,7 +28,7 @@ exports.postAddUsers = async (req, res) => {
     } 
     const saltrounds = 10;
     const hash = await bcrypt.hash(password, saltrounds);
-    const user = await Users.create({ username, email, password: hash }); 
+    const user = await Users.create({ username, email, password: hash, isPremiumUser: false }); 
     res.status(201).json(user);
 
   } catch (error) {

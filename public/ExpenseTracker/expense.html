@@ -59,11 +59,13 @@
             </div>
             <button class="btn" type="submit"> Add Expense </button>
         </form>
+        <form class="premium-click" id="premium">
+            <h2 class="premium-head"> To get excess of our premium working </h2>
+            <button type="submit" id="rzp-button"> Buy Premium </button>
+            <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+        </form>
 
         <div class="data-list">
-            <div class="errorMsg">
-
-            </div>
             <ul class="list-of-items" id="list-of-expenses">
                 
             </ul>
@@ -72,5 +74,7 @@
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.2/axios.min.js"></script>
     <script src="expense.js"></script>
+    <script src="premium.js"></script>
 </body>
 </html>
+
