@@ -7,7 +7,7 @@ const purchasePremium = async (req, res) => {
             key_id : 'rzp_test_ymshxTVZbrKr6k',
             key_secret : 'LnUsgIaS6LReW9gap0K4yG5n'
         });
-        const amount = 250;
+        const amount = 2500;
         rzp.orders.create({amount, currency: "INR"}, (err, order) => {
             if(err) {
                 throw new Error(JSON.stringify(err));
@@ -28,23 +28,18 @@ const purchasePremium = async (req, res) => {
 const updatedTransactionStatus = async (req, res) => {
     try {
         const { payment_id, order_id } = req.body;
-        Order.findOne({where: {orderId : order_id}})
-        .then(order => {
-            order.update({ paymentId : payment_id, status : 'SUCCESSFUL'})
-            .then(() => {
-                req.user.update({ isPremiumUser : true}).then(() => {
-                    return res.status(202).json({success : true, message: "Transaction Successful"});
-                }).catch(err => {
-                    throw new Error(err);
-                })
-            }).catch(err => {
-                throw new Error(err);
-            })
-        }).catch(err => {
-            throw new Error(err);
+        const order = await Order.findOne({where: {orderId : order_id}})
+        const promise1 = order.update({ paymentId : payment_id, status : 'SUCCESSFUL'})
+        const promise2 = req.user.update({ isPremiumUser : true})
+
+        Promise.all([promise1, promise2]).then(() => {
+            return res.status(202).json({success : true, message: "Transaction Successful"});
         })
+        .catch (err => {
+            throw new Error(err);
+        }) 
     } catch(err) {
-        
+        return res.status(403).json({success : false, message: "Server Failed"});   
     }
 }
 

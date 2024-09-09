@@ -37,9 +37,9 @@ exports.postAddUsers = async (req, res) => {
   }
 };
 
-function generateAccessToken(id, name) {
+function generateAccessToken(id, name, isPremium) {
   const secretKey = 'chysde4ths#5s647udumsnkff9823094mflksdmfs$ui#fjkljf';
-  return jwt.sign({ userId : id, userName : name}, secretKey)
+  return jwt.sign({ userId : id, userName : name, isPremium: isPremium}, secretKey)
 }
 
 exports.postAddLogin = async (req, res) => {
@@ -54,7 +54,7 @@ exports.postAddLogin = async (req, res) => {
         return res.status(200).json({ 
           success : true, 
           message: 'Login Successfully', 
-          token : generateAccessToken(user.id, user.username) 
+          token : generateAccessToken(user.id, user.username, user.isPremiumUser)
         });
       } else {
         console.log('Incorrect Password');

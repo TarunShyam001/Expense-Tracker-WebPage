@@ -49,6 +49,22 @@
     width: 100%;
 }
 
+#rzp-button {
+    margin-top: 15px;
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: 400;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-style: italic;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s ease;
+}
+
 .btn:hover {
     color: blue;
     background-color: rgb(251, 236, 210);
@@ -166,25 +182,11 @@ li.expense-item {
     margin-top: 20px;
 }
 
-.premium-head {
+#message {
     font-family: 'Times New Roman', Times, serif;
     font-size: 24px;
     color: #da6969;
     margin: 20px;
-}
-
-#rzp-button {
-    background-color: #4CAF50;
-    color: white;
-    padding: 12px 20px;
-    font-size: 18px;
-    font-weight: 500;
-    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-    font-style: italic;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
 }
 
 #rzp-button:hover {
@@ -192,7 +194,22 @@ li.expense-item {
     color: #45a049;
 }
 
+.show-leaderboard-button {
+    padding: 8px 12px;
+    margin: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    background-color: #10f717;
+    color: white;
+}
 
+/* Edit button specific styles */
+.show-leaderboard-button:hover{
+    background-color: #86ff8a;
+    color: rgb(11, 179, 2);
+}
 /* Responsive design for mobile */
 @media (max-width: 600px) {
     .expense-item {

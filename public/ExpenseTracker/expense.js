@@ -1,6 +1,6 @@
 const expenseForm = document.querySelector(".expense-form");
 
-const listOfItems = document.getElementById("list-of-expenses");
+const listOfItems = document.getElementById("list-of-items");
 
 let listOfExpense = [];
 
@@ -71,9 +71,18 @@ document.addEventListener('DOMContentLoaded', async function(event) {
     event.preventDefault();
     try {
         const token = localStorage.getItem('token');
+        const decodeToken = parseJWT(token);
+        console.log(decodeToken)
+        const ispremiumuser = decodeToken.isPremium;
+        if(ispremiumuser) {
+            showPremiumUserMessage();
+            showLeaderBoard();
+        }
+
         const response = await axios.get(`http://localhost:${port}/expense/get-expenses`, { headers: { 'Authorization': token } });
         listOfExpense = response.data;
         renderExpense(); // Make sure this is called after successfully fetching expenses
+
     } catch (error) {
         console.log('Error fetching expenses: ', error);
     }
@@ -119,7 +128,7 @@ document.getElementById('rzp-button').onclick = async function (event) {
 }
 
 function renderExpense() {
-    const expenseList = document.getElementById("list-of-expenses");
+    const expenseList = document.getElementById("list-of-items");
     expenseList.innerHTML = ''; // Clear the existing list
 
     listOfExpense.forEach((expense, index) => {
@@ -136,4 +145,38 @@ function renderExpense() {
         `;
         expenseList.appendChild(expenseItem);
     });
+}
+
+function parseJWT(token) {
+    var base64Url = token.split('.')[1];
+    var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+
+    return JSON.parse(jsonPayload);
+}
+
+function showPremiumUserMessage() {
+    document.getElementById('rzp-button').style.visibility = "hidden";
+    document.getElementById('message').style.visibility = "visible";
+}
+
+function showLeaderBoard() {
+    const inputElement = document.createElement('input')
+    inputElement.className = 'show-leaderboard-button';
+    inputElement.type = 'button'
+    inputElement.value = 'Show Leaderboard'
+    inputElement.onclick = async() => {
+        const token = localStorage.getItem('token')
+        const userLeaderBoardArray = await axios.get('http://localhost:5000/premium/showLeaderBoard', { headers: {"Authorization" : token} })
+        console.log(userLeaderBoardArray)
+
+        var leaderboardElem = document.getElementById('leaderboard')
+        leaderboardElem.innerHTML += '<h1> Leader Board </h1>'
+        userLeaderBoardArray.data.forEach((userDetails) => {
+            leaderboardElem.innerHTML += `<li>Name - ${userDetails.name} Total Expense - ${userDetails.totalExpenses}</li>`
+        })
+    }
+    document.getElementById("message").appendChild(inputElement);
 }
