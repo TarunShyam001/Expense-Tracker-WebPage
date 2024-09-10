@@ -25,8 +25,8 @@ const Users = sequelize.define('user', {
     allowNull : false
   },
   totalExpense : {
-    type : Sequelize.NUMBER,
-    default : 0
+    type : Sequelize.FLOAT,
+    defaultValue : 0
   }
 });
 

@@ -28,6 +28,8 @@ app.use('/premium', premiumRoutes);
 
 const port = 3450;
 
+// {force : true}
+
 sequelize
 .sync()
 .then((result) => {
