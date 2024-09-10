@@ -49,25 +49,22 @@
     width: 100%;
 }
 
-#rzp-button {
-    margin-top: 15px;
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px 20px;
-    font-size: 16px;
-    font-weight: 400;
-    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-    font-style: italic;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    width: 100%;
-    transition: background-color 0.3s ease;
-}
-
 .btn:hover {
     color: blue;
     background-color: rgb(251, 236, 210);
+}
+
+.forget{
+    color: #007bff;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 15px;
+    display: none;
+    margin: 0 auto;
+}
+
+.forget:hover {
+    color: red;
+    font-size: 17px;
 }
 
 .heading {
@@ -187,6 +184,25 @@ li.expense-item {
     font-size: 24px;
     color: #da6969;
     margin: 20px;
+}
+
+#rzp-button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: 400;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-style: italic;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 30%;
+    transition: background-color 0.3s ease;
+
+    /* Center the button */
+    display: block;
+    margin: 0 auto; /* Horizontally center the button */
 }
 
 #rzp-button:hover {

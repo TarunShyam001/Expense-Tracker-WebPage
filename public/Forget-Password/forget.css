@@ -7,7 +7,7 @@ main {
     margin: 50px;
 }
 
-#login-form {
+#forget-password-form {
     background-color: #81f5e9;
     padding: 20px;
     border-radius: 8px;
@@ -90,7 +90,7 @@ button:hover {
 
 .switch-right:hover {
     text-decoration: underline;
-    color: red;
+    color: #0056b3;
 }
 
 #err {
