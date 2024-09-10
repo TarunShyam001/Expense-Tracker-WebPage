@@ -19,60 +19,53 @@ exports.postAddExpense = async (req, res) => {
     try{
         const userId = req.user.id;
         const {title, category, amount, details} = req.body;
-        await Expense.create({title, category, amount, details, userId}, { transaction : t})
-        .then(expense => {
-            const totalExpense = Number(req.user.totalExpense) + Number(expense.amount);
-            Users.update({
-                totalExpense : totalExpense,
-            },{
-                where : { id : req.user.id },
-                transaction : t
-            }).then(async () => {
-                await t.commit();
-                return res.status(200).json(expense);
-            }).catch(async (err) => {
-                await t.rollback();
-                console.log(err);
-                return res.status(404).json({success : false, error : err});
-            });
-        })
-        .catch(async (err) => {
-            await t.rollback();
-            console.log(err);
-            return res.status(404).json({success : false, error : err});
+        const expense = await Expense.create({title, category, amount, details, userId}, { transaction : t});
+        
+        const totalExpense = Number(req.user.totalExpense) + Number(expense.amount);
+
+        await Users.update({
+            totalExpense : totalExpense,
+        },{
+            where : { id : req.user.id },
+            transaction : t
         });
+
+        await t.commit();
+        return res.status(200).json(expense);
+
     } catch(err) {
-        return res.status(403).json({success : false, error : err});
+        await t.rollback();
+        console.log(err);
+        return res.status(500).json({success : false, error : err});
     }
   };
 
   exports.postDeleteExpense = async (req, res) => {
+    const t = await sequelize.transaction();
     try {
         const id = req.params.expenseId;
-        await Expense.findByPk(id)
-        .then(async (expense) => {
-            if (!expense) {
-                return res.status(404).json({ err: 'Expense not found' });
-            }
-            const user = await Users.findByPk(expense.userId);
-            const totalExpense = Number(user.totalExpense) - Number(expense.amount);
-            Users.update({
-                totalExpense : totalExpense,
-            },{
-                where : { id : user.id},
-            }).then(async () => {
-                await expense.destroy();
-                res.status(200).json({ message: 'Expense deleted successfully' }); // Send a response
-            }).catch(err => {
-                console.log(err);
-                return res.status(404).json({success : false, error : err});
-            });
+        const expense = await Expense.findByPk(id)
+        if (!expense) {
+            return res.status(404).json({ err: 'Expense not found' });
+        }
+        
+        const user = await Users.findByPk(expense.userId);
+        const totalExpense = Number(user.totalExpense) - Number(expense.amount);
+        await Users.update({
+            totalExpense : totalExpense,
+        },{
+            where : { id : user.id},
+            transaction : t
         })
-        .catch(err => {
-            console.log(err);
-            return res.status(404).json({success : false, error : err});
-        });
+
+        await expense.destroy({transaction : t});
+
+        await t.commit();
+        res.status(200).json({ message: 'Expense deleted successfully' }); // Send a response
+
     } catch (error) {
+
+        await t.rollback();
         console.error('Error deleting expense:', error);
         res.status(500).json({ error: 'Server error' });
     }
