@@ -2,6 +2,7 @@ const { where } = require('sequelize');
 const Users = require('../models/users');
 const Expense = require('../models/expense');
 const bcrypt = require('bcrypt');
+const sequelize = require('../util/database');
 
 exports.getExpense = async (req, res) => {
     try {
@@ -14,24 +15,29 @@ exports.getExpense = async (req, res) => {
 };
 
 exports.postAddExpense = async (req, res) => {
+    const t = await sequelize.transaction();
     try{
         const userId = req.user.id;
         const {title, category, amount, details} = req.body;
-        await Expense.create({title, category, amount, details, userId})
+        await Expense.create({title, category, amount, details, userId}, { transaction : t})
         .then(expense => {
             const totalExpense = Number(req.user.totalExpense) + Number(expense.amount);
             Users.update({
                 totalExpense : totalExpense,
             },{
                 where : { id : req.user.id },
+                transaction : t
             }).then(async () => {
+                await t.commit();
                 return res.status(200).json(expense);
-            }).catch(err => {
+            }).catch(async (err) => {
+                await t.rollback();
                 console.log(err);
                 return res.status(404).json({success : false, error : err});
             });
         })
-        .catch(err => {
+        .catch(async (err) => {
+            await t.rollback();
             console.log(err);
             return res.status(404).json({success : false, error : err});
         });
