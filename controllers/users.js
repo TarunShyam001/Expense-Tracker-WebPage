@@ -9,7 +9,7 @@ function isPasswordValid(str) {
   return typeof str === 'string' && pattern.test(str);
 }
 
-exports.postAddUsers = async (req, res) => {
+const postAddUsers = async (req, res) => {
   const {username, email, password} = req.body; 
   console.log('Received Data'+ req.body);
   try {
@@ -28,7 +28,7 @@ exports.postAddUsers = async (req, res) => {
     } 
     const saltrounds = 10;
     const hash = await bcrypt.hash(password, saltrounds);
-    const user = await Users.create({ username, email, password: hash, isPremiumUser: false }); 
+    const user = await Users.create({ username, email, password: hash, isPremiumUser: false}); 
     res.status(201).json(user);
 
   } catch (error) {
@@ -42,7 +42,7 @@ function generateAccessToken(id, name, isPremium) {
   return jwt.sign({ userId : id, userName : name, isPremium: isPremium}, secretKey)
 }
 
-exports.postAddLogin = async (req, res) => {
+const postAddLogin = async (req, res) => {
   const { email, password } = req.body; 
   try {
     const user = await Users.findOne({ where: { email } });
@@ -69,3 +69,9 @@ exports.postAddLogin = async (req, res) => {
     return res.status(500).json({ message: 'Server error' });
   }
 };
+
+module.exports = {
+  postAddUsers,
+  postAddLogin,
+  generateAccessToken
+}

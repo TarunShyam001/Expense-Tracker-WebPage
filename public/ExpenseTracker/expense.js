@@ -71,12 +71,12 @@ document.addEventListener('DOMContentLoaded', async function(event) {
     event.preventDefault();
     try {
         const token = localStorage.getItem('token');
-        const decodeToken = parseJWT(token);
+        const decodeToken = parseJwt(token);
         console.log(decodeToken)
         const ispremiumuser = decodeToken.isPremium;
         if(ispremiumuser) {
             showPremiumUserMessage();
-            showLeaderBoard();
+            // showLeaderBoard();
         }
 
         const response = await axios.get(`http://localhost:${port}/expense/get-expenses`, { headers: { 'Authorization': token } });
@@ -101,12 +101,18 @@ document.getElementById('rzp-button').onclick = async function (event) {
             "order_id": response.data.order.id,
             "handler": async function (paymentResponse) {
                 try {
-                    await axios.post(`http://localhost:${port}/purchase/updated-transaction-status`, {
+                    const res = await axios.post(`http://localhost:${port}/purchase/updated-transaction-status`, {
                         order_id: options.order_id,
                         payment_id: paymentResponse.razorpay_payment_id,
                     }, { headers: { "Authorization": token } });
 
+                    console.log(res);
                     alert('You are a Premium User now');
+                    document.getElementById('rzp-button').style.visibility = "hidden"
+                    document.getElementById('message').style.visibility = "visible"
+                    localStorage.setItem('token', res.data.token)
+                    showLeaderBoard();
+
                 } catch (error) {
                     alert('Error updating transaction status');
                     console.log(error);
@@ -147,7 +153,7 @@ function renderExpense() {
     });
 }
 
-function parseJWT(token) {
+function parseJwt(token) {
     var base64Url = token.split('.')[1];
     var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
     var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
@@ -162,21 +168,21 @@ function showPremiumUserMessage() {
     document.getElementById('message').style.visibility = "visible";
 }
 
-function showLeaderBoard() {
-    const inputElement = document.createElement('input')
-    inputElement.className = 'show-leaderboard-button';
-    inputElement.type = 'button'
-    inputElement.value = 'Show Leaderboard'
-    inputElement.onclick = async() => {
-        const token = localStorage.getItem('token')
-        const userLeaderBoardArray = await axios.get('http://localhost:5000/premium/showLeaderBoard', { headers: {"Authorization" : token} })
-        console.log(userLeaderBoardArray)
+// function showLeaderBoard() {
+//     const inputElement = document.createElement('input')
+//     inputElement.className = 'show-leaderboard-button';
+//     inputElement.type = 'button'
+//     inputElement.value = 'Show Leaderboard'
+//     inputElement.onclick = async() => {
+//         const token = localStorage.getItem('token')
+//         const userLeaderBoardArray = await axios.get('http://localhost:5000/premium/showLeaderBoard', { headers: {"Authorization" : token} })
+//         console.log(userLeaderBoardArray)
 
-        var leaderboardElem = document.getElementById('leaderboard')
-        leaderboardElem.innerHTML += '<h1> Leader Board </h1>'
-        userLeaderBoardArray.data.forEach((userDetails) => {
-            leaderboardElem.innerHTML += `<li>Name - ${userDetails.name} Total Expense - ${userDetails.totalExpenses}</li>`
-        })
-    }
-    document.getElementById("message").appendChild(inputElement);
-}
+//         var leaderboardElem = document.getElementById('leaderboard')
+//         leaderboardElem.innerHTML += '<h1> Leader Board </h1>'
+//         userLeaderBoardArray.data.forEach((userDetails) => {
+//             leaderboardElem.innerHTML += `<li>Name - ${userDetails.name} Total Expense - ${userDetails.totalExpenses}</li>`
+//         })
+//     }
+//     document.getElementById("message").appendChild(inputElement);
+// }
