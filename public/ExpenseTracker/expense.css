@@ -210,6 +210,58 @@ li.expense-item {
     background-color: #86ff8a;
     color: rgb(11, 179, 2);
 }
+
+/* leaderboard.css */
+
+#list-of-expenses {
+    margin: 20px auto;
+    padding: 0;
+    width: 100%;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    list-style: none;
+    overflow: hidden;
+}
+
+#list-of-expenses h1 {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    margin: 10px 0;
+    padding: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 8px 8px 0 0;
+}
+
+.items-list {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 20px;
+    background-color: #fff;
+    border-bottom: 1px solid #ddd;
+    font-size: 18px;
+}
+
+.items-list:nth-child(even) {
+    background-color: #f1f1f1;
+}
+
+.items-list:last-child {
+    border-bottom: none;
+}
+
+.items-list:hover {
+    background-color: #e2e6ea;
+}
+
+.items-list span {
+    font-weight: bold;
+    color: #343a40;
+}
+
+
 /* Responsive design for mobile */
 @media (max-width: 600px) {
     .expense-item {

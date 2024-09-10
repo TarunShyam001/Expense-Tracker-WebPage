@@ -179,9 +179,12 @@ function showLeaderBoard() {
         console.log(userLeaderBoardArray)
 
         var leaderboardElem = document.getElementById('list-of-expenses')
+        
+        leaderboardElem.innerHTML = '';    // Clear the previous leaderboard content
+
         leaderboardElem.innerHTML += '<h1> Leader Board </h1>'
         userLeaderBoardArray.data.forEach((userDetails) => {
-            leaderboardElem.innerHTML += `<li class="items-list">Name - ${userDetails.name} Total Expense - ${userDetails.totalExpense}</li>`
+            leaderboardElem.innerHTML += `<li class="items-list">Name - ${userDetails.name} --- & --- Total Expense - ${userDetails.totalExpense}</li>`
         })
     }
     document.getElementById("message").appendChild(inputElement);
