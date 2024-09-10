@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', async function(event) {
         const ispremiumuser = decodeToken.isPremium;
         if(ispremiumuser) {
             showPremiumUserMessage();
-            // showLeaderBoard();
+            showLeaderBoard();
         }
 
         const response = await axios.get(`http://localhost:${port}/expense/get-expenses`, { headers: { 'Authorization': token } });
@@ -168,21 +168,21 @@ function showPremiumUserMessage() {
     document.getElementById('message').style.visibility = "visible";
 }
 
-// function showLeaderBoard() {
-//     const inputElement = document.createElement('input')
-//     inputElement.className = 'show-leaderboard-button';
-//     inputElement.type = 'button'
-//     inputElement.value = 'Show Leaderboard'
-//     inputElement.onclick = async() => {
-//         const token = localStorage.getItem('token')
-//         const userLeaderBoardArray = await axios.get('http://localhost:5000/premium/showLeaderBoard', { headers: {"Authorization" : token} })
-//         console.log(userLeaderBoardArray)
+function showLeaderBoard() {
+    const inputElement = document.createElement('input')
+    inputElement.className = 'show-leaderboard-button';
+    inputElement.type = 'button'
+    inputElement.value = 'Show Leaderboard'
+    inputElement.onclick = async() => {
+        const token = localStorage.getItem('token')
+        const userLeaderBoardArray = await axios.get(`http://localhost:${port}/premium/showLeaderBoard`, { headers: {"Authorization" : token} })
+        console.log(userLeaderBoardArray)
 
-//         var leaderboardElem = document.getElementById('leaderboard')
-//         leaderboardElem.innerHTML += '<h1> Leader Board </h1>'
-//         userLeaderBoardArray.data.forEach((userDetails) => {
-//             leaderboardElem.innerHTML += `<li>Name - ${userDetails.name} Total Expense - ${userDetails.totalExpenses}</li>`
-//         })
-//     }
-//     document.getElementById("message").appendChild(inputElement);
-// }
+        var leaderboardElem = document.getElementById('list-of-expenses')
+        leaderboardElem.innerHTML += '<h1> Leader Board </h1>'
+        userLeaderBoardArray.data.forEach((userDetails) => {
+            leaderboardElem.innerHTML += `<li class="items-list">Name - ${userDetails.name} Total Expense - ${userDetails.totalExpense}</li>`
+        })
+    }
+    document.getElementById("message").appendChild(inputElement);
+}

@@ -10,6 +10,7 @@ const Order = require('./models/order');
 const userRoutes = require('./routes/users');
 const expenseRoutes = require('./routes/expense');
 const purchaseRoutes = require('./routes/purchase');
+const premiumRoutes = require('./routes/premium');
 
 app.use(express.json());
 app.use(cors());
@@ -23,6 +24,7 @@ Order.belongsTo(Users);
 app.use('/user', userRoutes);
 app.use('/expense', expenseRoutes);
 app.use('/purchase', purchaseRoutes);
+app.use('/premium', premiumRoutes);
 
 const port = 3450;
 
