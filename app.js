@@ -6,11 +6,16 @@ const cors = require("cors");
 const Users = require ('./models/users');
 const Expense = require('./models/expense');
 const Order = require('./models/order');
+const dotenv = require('dotenv');
+
+// get config vars
+dotenv.config();
 
 const userRoutes = require('./routes/users');
 const expenseRoutes = require('./routes/expense');
 const purchaseRoutes = require('./routes/purchase');
 const premiumRoutes = require('./routes/premium');
+const forgetRoutes = require('./routes/forget');
 
 app.use(express.json());
 app.use(cors());
@@ -25,6 +30,7 @@ app.use('/user', userRoutes);
 app.use('/expense', expenseRoutes);
 app.use('/purchase', purchaseRoutes);
 app.use('/premium', premiumRoutes);
+app.use('/password', forgetRoutes);
 
 const port = 3450;
 

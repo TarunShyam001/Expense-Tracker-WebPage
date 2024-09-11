@@ -4,6 +4,7 @@
   "description": "Its a web-page to works on to track the expenses of the user-login to the system",
   "main": "app.js",
   "scripts": {
+    "start" : "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Tarun Shyam",
