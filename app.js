@@ -7,10 +7,6 @@ const Users = require ('./models/users');
 const Expense = require('./models/expense');
 const Order = require('./models/order');
 const ForgetPassword = require('./models/forget');
-const dotenv = require('dotenv');
-
-// get config vars
-dotenv.config();
 
 const userRoutes = require('./routes/users');
 const expenseRoutes = require('./routes/expense');
