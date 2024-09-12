@@ -4,7 +4,7 @@
   "description": "Its a web-page to works on to track the expenses of the user-login to the system",
   "main": "app.js",
   "scripts": {
-    "start" : "node app.js",
+    "start": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Tarun Shyam",
@@ -13,6 +13,7 @@
     "nodemon": "^3.1.4"
   },
   "dependencies": {
+    "@getbrevo/brevo": "^2.2.0",
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",

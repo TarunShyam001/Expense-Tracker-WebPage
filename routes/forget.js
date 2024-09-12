@@ -1,11 +1,14 @@
-const path = require('path');
-
 const express = require('express');
 
-const adminController = require('../controllers/forget');
+const resetpasswordController = require('../controllers/forget');
+
 
 const router = express.Router();
 
-router.post('/forgetpassword', adminController.forgetPassword);
+router.get('/updatepassword/:resetpasswordid', resetpasswordController.updatepassword)
+
+router.get('/resetpassword/:id', resetpasswordController.resetpassword)
+
+router.use('/forgotpassword', resetpasswordController.forgotpassword)
 
 module.exports = router;

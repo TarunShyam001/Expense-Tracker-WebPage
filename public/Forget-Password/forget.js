@@ -11,12 +11,22 @@ forgetPasswordForm.addEventListener('submit', async(event) => {
     const email = document.getElementById('email').value;
   
     try{
-        const response = await axios.post(`http://localhost:${port}/password/forgotpassword`,{email});
+        await axios.post(`http://localhost:${port}/password/forgotpassword`,{email})
+        .then(response => {
+            if(response.status === 202) {
+                document.body.innerHTML += '<div style="color:red;">Mail Successfuly sent </div>';
+            } else {
+                throw new Error ('Something went wrong!!!')
+            }
+        })
+        .catch(err => {
+            document.body.innerHTML += `<div style="color:red;">${err} </div>`;
+        });
         console.log(response);
         document.getElementById('email').value = "";
 
         alert(response.data.message);
-        // window.location.href = "../ExpenseTracker/expense.html"
+        
     }
     catch(error){
         console.log('Error adding user: ',error);

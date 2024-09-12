@@ -6,6 +6,7 @@ const cors = require("cors");
 const Users = require ('./models/users');
 const Expense = require('./models/expense');
 const Order = require('./models/order');
+const ForgetPassword = require('./models/forget');
 const dotenv = require('dotenv');
 
 // get config vars
@@ -25,6 +26,9 @@ Expense.belongsTo(Users);
 
 Users.hasMany(Order);
 Order.belongsTo(Users);
+
+Users.hasMany(ForgetPassword);
+ForgetPassword.belongsTo(Users);
 
 app.use('/user', userRoutes);
 app.use('/expense', expenseRoutes);
