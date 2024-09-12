@@ -18,7 +18,7 @@ const forgotpassword = async (req, res) => {
 
             // Set up Brevo API key
             // const brevoApiKey = process.env.BREV_API_KEY;
-            const brevoApiKey = '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';
+            const brevoApiKey = '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';
 
             // Initialize the TransactionalEmailsApi with the API key
             const apiInstance = new TransactionalEmailsApi();
