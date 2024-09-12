@@ -173,6 +173,12 @@ function showLeaderBoard() {
     inputElement.className = 'show-leaderboard-button';
     inputElement.type = 'button'
     inputElement.value = 'Show Leaderboard'
+    
+    const download = document.createElement('input')
+    download.className = 'download-content';
+    download.type = 'button'
+    download.value = 'download-file'
+    
     inputElement.onclick = async() => {
         const token = localStorage.getItem('token')
         const userLeaderBoardArray = await axios.get(`http://localhost:${port}/premium/showLeaderBoard`, { headers: {"Authorization" : token} })
@@ -189,5 +195,28 @@ function showLeaderBoard() {
             i = i + 1;
         })
     }
+
+    download.onclick = async() => {
+        await axios.get(`http://localhost:${port}/user/download`, { headers: {"Authorization" : token} })
+        .then((response) => {
+            if(response.status === 201) {
+                var a = document.createElement("a");
+                a.href = response.data.fileUrl;
+                a.download = 'myexpense.csv';
+                a.click();
+            } else {
+                throw new Error(response.data.message)
+            }
+        })
+        .catch((err) => {
+            showError(err)
+        });
+    }
+
     document.getElementById("message").appendChild(inputElement);
+    document.getElementById("message").appendChild(download);
 }
+
+// function download() {
+    
+// }
