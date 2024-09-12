@@ -14,7 +14,7 @@ forgetPasswordForm.addEventListener('submit', async(event) => {
         await axios.post(`http://localhost:${port}/password/forgotpassword`,{email})
         .then(response => {
             if(response.status === 202) {
-                document.body.innerHTML += '<div style="color:red;">Mail Successfuly sent </div>';
+                alert('mail sent successfull');
             } else {
                 throw new Error ('Something went wrong!!!')
             }

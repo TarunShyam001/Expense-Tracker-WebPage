@@ -6,6 +6,8 @@ const bcrypt = require('bcrypt');
 const User = require('../models/users');
 const Forgotpassword = require('../models/forget');
 
+const port = 3450;
+
 // Function to handle forgot password request
 const forgotpassword = async (req, res) => {
     try {
@@ -18,7 +20,7 @@ const forgotpassword = async (req, res) => {
 
             // Set up Brevo API key
             // const brevoApiKey = process.env.BREV_API_KEY;
-            const brevoApiKey = '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';
+            const brevoApiKey = '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';
 
             // Initialize the TransactionalEmailsApi with the API key
             const apiInstance = new TransactionalEmailsApi();
@@ -30,7 +32,7 @@ const forgotpassword = async (req, res) => {
 
             // Fill in the email details
             sendSmtpEmail.subject = 'Reset Password Request';
-            sendSmtpEmail.htmlContent = `<p>Click the link below to reset your password.</p><a href="http://localhost:5000/password/resetpassword/${id}">Reset password</a>`;
+            sendSmtpEmail.htmlContent = `<p>Click the link below to reset your password.</p><a href="http://localhost:${port}/password/resetpassword/${id}">Reset password</a>`;
             sendSmtpEmail.sender = { name: 'Tarun Shyam', email: 'shyamtarun2001@gmail.com' };
             sendSmtpEmail.to = [{ email }];
             // Add any other necessary email fields here (cc, bcc, replyTo, headers, etc.)
