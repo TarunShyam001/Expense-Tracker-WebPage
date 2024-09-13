@@ -206,7 +206,7 @@ function showLeaderBoard() {
                 a.download = 'myexpense.csv';
                 a.click();
             } else {
-                throw new Error(response.data.message)
+                throw new Error(response.data.error)
             }
         })
         .catch((err) => {

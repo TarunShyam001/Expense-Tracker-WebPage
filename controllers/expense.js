@@ -84,14 +84,15 @@ function uploadToS3(data, filename) {
         secretAccessKey : IAM_USER_SECRET_KEY,
         region : 'us-east-1'
     })
-
+    
+    var params = {
+        Bucket : BUCKET_NAME,
+        Key : filename,
+        Body : data,
+        ACL : 'public-read'
+    };
+    
     return new Promise((resolve, reject) => {
-        var params = {
-            Bucket : BUCKET_NAME,
-            Key : filename,
-            Body : data,
-            ACL : 'public-read'
-        };
         s3bucket.upload(params, (err,s3response) => {
             if(err) {
                 console.log('Something went wrong', err);
@@ -101,8 +102,8 @@ function uploadToS3(data, filename) {
                 resolve(s3response.Location);
             }
         })
-    });
 
+    })
 
 }
 
@@ -112,9 +113,9 @@ const downloadFile = async (req, res) => {
         // console.log(expenses);
     
         const stringifiedExpenses = JSON.stringify(expenses);
-        const fileName = 'Expenses.txt';
-        const fileURL = uploadToS3(stringifiedExpenses, fileName);
-        return res.status(200).json({file : fileURL, success : true});
+        const fileName = `Expenses-${req.user.id}-data/${new Date()}.txt`;
+        const fileUrl = await uploadToS3(stringifiedExpenses, fileName);
+        return res.status(201).json({ fileUrl, success : true});
     } catch(err) {
         return res.status(500).json({error : err, success : false});
     }
