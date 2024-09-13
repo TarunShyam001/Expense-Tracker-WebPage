@@ -197,7 +197,8 @@ function showLeaderBoard() {
     }
 
     download.onclick = async() => {
-        await axios.get(`http://localhost:${port}/user/download`, { headers: {"Authorization" : token} })
+        const token = localStorage.getItem('token');
+        await axios.get(`http://localhost:${port}/expense/download`, { headers: {"Authorization" : token} })
         .then((response) => {
             if(response.status === 201) {
                 var a = document.createElement("a");

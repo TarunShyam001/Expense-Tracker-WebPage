@@ -71,8 +71,13 @@ const postAddLogin = async (req, res) => {
   }
 };
 
+const downloadFile = async (req, res) => {
+  
+}
+
 module.exports = {
   postAddUsers,
   postAddLogin,
+  downloadFile,
   generateAccessToken
 }
