@@ -6,6 +6,9 @@ let listOfExpense = [];
 
 const port = 3450;
 
+let currentPage = 1;  // Track the current page
+const itemsPerPage = 2; // Track the items in a page
+
 document.addEventListener('DOMContentLoaded', async function(event) {
     event.preventDefault();
     try {
@@ -14,7 +17,7 @@ document.addEventListener('DOMContentLoaded', async function(event) {
         console.log(decodeToken)
         const ispremiumuser = decodeToken.isPremium;
 
-        await getExpense(1);
+        await getExpense(currentPage);
 
         if(ispremiumuser) {
             showPremiumUserMessage();
@@ -32,6 +35,8 @@ async function getExpense(page) {
         const response = await axios.get(`http://localhost:${port}/expense/get-expenses?page=${page}`, { headers: { 'Authorization': token } });
         listOfExpense = response.data.expenses;
         pageInfo = response.data.pageData;
+
+        currentPage = pageInfo.currentPage;
 
         await showPagination(pageInfo);
 
@@ -58,8 +63,16 @@ expenseForm.addEventListener('submit', async(event) => {
 
         console.log(response.data); // Check the structure of the returned data
 
-        listOfExpense.push(response.data);
-        console.log(listOfExpense);
+        if (listOfExpense.length >= itemsPerPage) {
+            // Check if adding a new expense exceeds the page limit
+            const totalItems = pageInfo.totalItems + 1;
+            if (totalItems % itemsPerPage === 1) {
+                // If totalItems is a multiple of itemsPerPage + 1, we are on the last page
+                currentPage = 1; // Move to first page
+            }
+        }
+
+        await getExpense(currentPage); // Fetch expenses for the new page
 
         document.getElementById('title').value = "";
         document.getElementById('amount').value = "";
@@ -81,8 +94,13 @@ async function deleteExpense(index) {
     try {
         await axios.delete(`http://localhost:${port}/expense/delete-expense/${expense.id}`);
         listOfExpense.splice(index, 1);
+        
+        // Adjust currentPage if deleting an item on the last page and it's empty now
+        if (listOfExpense.length === 0 && currentPage > 1) {
+            currentPage -= 1;
+        }
 
-        renderExpense();
+        await getExpense(currentPage);
     } catch (error) {
         console.error('Error deleting expense:', error);
     }
@@ -96,8 +114,8 @@ async function editExpense(index) {
         document.getElementById('category').value = expense.category;
         document.getElementById('details').value = expense.details;
 
-        deleteExpense(index);
-        renderExpense();
+        await deleteExpense(index);
+        await getExpense(currentPage);
 
     } catch (error) {
         console.error('Error editing expense:', error);
@@ -157,20 +175,20 @@ async function showPagination(pageObj) {
         const nextPage = pageObj.nextPage;
 
         if (pageObj.hasPrevPage) {
-            document.getElementById('prev-page').onclick = () => getExpense(prevPage); // Corrected here
+            document.getElementById('prev-page').onclick = () => getExpense(prevPage); // function gets called inside onclicked function
             document.getElementById('prev-page').style.visibility = 'visible';
         } else {
             document.getElementById('prev-page').style.visibility = 'hidden';
         }
 
         if (pageObj.hasNextPage) {
-            document.getElementById('next-page').onclick = () => getExpense(nextPage); // Corrected here
+            document.getElementById('next-page').onclick = () => getExpense(nextPage); // function gets called inside onclicked function
             document.getElementById('next-page').style.visibility = 'visible';
         } else {
             document.getElementById('next-page').style.visibility = 'hidden';
         }
 
-        document.getElementById('curr-page').onclick = () => getExpense(currentPage); // Corrected here
+        document.getElementById('curr-page').onclick = () => getExpense(currentPage); // function gets called inside onclicked function
         document.getElementById('currentPageDisplay').textContent = `${currentPage}`;
     } catch (err) {
         console.log('error on fetching the list : ', err);
