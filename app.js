@@ -1,5 +1,9 @@
+const dotenv = require('dotenv');
+dotenv.config();
+
 const express = require('express');
 const app = express();
+
 const sequelize = require ('./util/database');
 
 const cors = require("cors");
@@ -32,7 +36,7 @@ app.use('/purchase', purchaseRoutes);
 app.use('/premium', premiumRoutes);
 app.use('/password', forgetRoutes);
 
-const port = 3450;
+const port = process.env.PORT;
 
 // {force : true}
 
@@ -40,7 +44,7 @@ sequelize
 .sync()
 .then((result) => {
     console.log(`server is working on http://localhost:${port}`);
-   app.listen(port);
+   app.listen(3000);
 }).catch((err) => {
     console.log(err)
 });

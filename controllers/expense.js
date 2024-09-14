@@ -93,9 +93,9 @@ const postAddExpense = async (req, res) => {
 
 async function uploadToS3(data, filename) {
     try{
-        const BUCKET_NAME = 'expensetracking123';
-        const IAM_USER_ACCESS_KEY = 'AKIAU6VTTSFC6TROJK4Z';
-        const IAM_USER_SECRET_KEY = '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';
+        const BUCKET_NAME = process.env.BUCKET_NAME;
+        const IAM_USER_ACCESS_KEY = process.env.ACCESS_KEY;
+        const IAM_USER_SECRET_KEY =  process.env.SECRET_KEY;
     
         const s3Region = 'us-east-1'
         const s3 = new S3Client({
@@ -132,22 +132,6 @@ async function uploadToS3(data, filename) {
         throw err;
     }
 }
-
-
-    // return new Promise((resolve, reject) => {
-    //     s3bucket.send(command, (err,s3response) => {
-    //         if(err) {
-    //             console.log('Something went wrong', err);
-    //             reject(err);
-    //         } else {
-    //             console.log('success : ', s3response);
-    //             resolve(s3response.Location);
-    //         }
-    //     })
-
-    // })
-
-// }
 
 const downloadFile = async (req, res) => {
     try {

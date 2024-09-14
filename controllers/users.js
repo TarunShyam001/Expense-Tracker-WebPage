@@ -38,8 +38,7 @@ const postAddUsers = async (req, res) => {
 };
 
 function generateAccessToken(id, name, isPremium) {
-  // const secretKey = process.env.TOKEN_SECRET;
-  const secretKey = 'chysde4ths#5s647udumsnkff9823094mflksdmfs$ui#fjkljf'
+  const secretKey = process.env.TOKEN_SECRET;
   return jwt.sign({ userId : id, userName : name, isPremium: isPremium}, secretKey)
 }
 

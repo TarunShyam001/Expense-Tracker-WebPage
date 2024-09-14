@@ -4,7 +4,8 @@
   "description": "Its a expense tracking application",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
+    "start": "node app.js node .env",
+    "start-dev" : "nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Tarun Shyam",
