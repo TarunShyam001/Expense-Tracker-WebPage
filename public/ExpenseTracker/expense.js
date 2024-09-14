@@ -6,6 +6,43 @@ let listOfExpense = [];
 
 const port = 3450;
 
+document.addEventListener('DOMContentLoaded', async function(event) {
+    event.preventDefault();
+    try {
+        const token = localStorage.getItem('token');
+        const decodeToken = parseJwt(token);
+        console.log(decodeToken)
+        const ispremiumuser = decodeToken.isPremium;
+
+        await getExpense(1);
+
+        if(ispremiumuser) {
+            showPremiumUserMessage();
+            showLeaderBoard();
+        }
+
+    } catch (error) {
+        console.log('Error fetching expenses: ', error);
+    }
+});
+
+async function getExpense(page) {
+    const token = localStorage.getItem('token');
+    try{
+        const response = await axios.get(`http://localhost:${port}/expense/get-expenses?page=${page}`, { headers: { 'Authorization': token } });
+        listOfExpense = response.data.expenses;
+        pageInfo = response.data.pageData;
+
+        await showPagination(pageInfo);
+
+        await renderExpense();
+
+    }
+    catch(err) {
+        console.log('Error on fetching data : ', err);
+    }
+}
+
 expenseForm.addEventListener('submit', async(event) => {
     event.preventDefault();
     const expenseDetails = {
@@ -67,26 +104,6 @@ async function editExpense(index) {
     }
 }
 
-document.addEventListener('DOMContentLoaded', async function(event) {
-    event.preventDefault();
-    try {
-        const token = localStorage.getItem('token');
-        const decodeToken = parseJwt(token);
-        console.log(decodeToken)
-        const ispremiumuser = decodeToken.isPremium;
-        if(ispremiumuser) {
-            showPremiumUserMessage();
-            showLeaderBoard();
-        }
-
-        const response = await axios.get(`http://localhost:${port}/expense/get-expenses`, { headers: { 'Authorization': token } });
-        listOfExpense = response.data;
-        renderExpense(); // Make sure this is called after successfully fetching expenses
-
-    } catch (error) {
-        console.log('Error fetching expenses: ', error);
-    }
-});
 
 document.getElementById('rzp-button').onclick = async function (event) {
     event.preventDefault();  // Prevent default action of the button
@@ -133,24 +150,56 @@ document.getElementById('rzp-button').onclick = async function (event) {
     }
 }
 
-function renderExpense() {
-    const expenseList = document.getElementById("list-of-items");
-    expenseList.innerHTML = ''; // Clear the existing list
+async function showPagination(pageObj) {
+    try {
+        const currentPage = pageObj.currentPage;
+        const prevPage = pageObj.prevPage;
+        const nextPage = pageObj.nextPage;
 
-    listOfExpense.forEach((expense, index) => {
-        const expenseItem = document.createElement('li');
-        expenseItem.classList.add('expense-item');
+        if (pageObj.hasPrevPage) {
+            document.getElementById('prev-page').onclick = () => getExpense(prevPage); // Corrected here
+            document.getElementById('prev-page').style.visibility = 'visible';
+        } else {
+            document.getElementById('prev-page').style.visibility = 'hidden';
+        }
 
-        expenseItem.innerHTML = `
-            <h3 class="exp-title">${expense.title}</h3>
-            <h4 class="exp-amount">Rs.${expense.amount}/-</h4>
-            <h4 class="exp-category">${expense.category}</h4>
-            <p class="exp-details">${expense.details}</p>
-            <button onclick="editExpense(${index})" class="edit-btn">Edit</button>
-            <button onclick="deleteExpense(${index})" class="delete-btn">Delete</button>
-        `;
-        expenseList.appendChild(expenseItem);
-    });
+        if (pageObj.hasNextPage) {
+            document.getElementById('next-page').onclick = () => getExpense(nextPage); // Corrected here
+            document.getElementById('next-page').style.visibility = 'visible';
+        } else {
+            document.getElementById('next-page').style.visibility = 'hidden';
+        }
+
+        document.getElementById('curr-page').onclick = () => getExpense(currentPage); // Corrected here
+        document.getElementById('currentPageDisplay').textContent = `${currentPage}`;
+    } catch (err) {
+        console.log('error on fetching the list : ', err);
+    }
+}
+
+
+async function renderExpense() {
+    try {
+        const expenseList = document.getElementById("list-of-items");
+        expenseList.innerHTML = ''; // Clear the existing list
+    
+        listOfExpense.forEach((expense, index) => {
+            const expenseItem = document.createElement('li');
+            expenseItem.classList.add('expense-item');
+    
+            expenseItem.innerHTML = `
+                <h3 class="exp-title">${expense.title}</h3>
+                <h4 class="exp-amount">Rs.${expense.amount}/-</h4>
+                <h4 class="exp-category">${expense.category}</h4>
+                <p class="exp-details">${expense.details}</p>
+                <button onclick="editExpense(${index})" class="edit-btn">Edit</button>
+                <button onclick="deleteExpense(${index})" class="delete-btn">Delete</button>
+            `;
+            expenseList.appendChild(expenseItem);
+        });
+    } catch (err) {
+        console.log('error on fetching the list : ', err);
+    }
 }
 
 function parseJwt(token) {
@@ -217,7 +266,3 @@ function showLeaderBoard() {
     document.getElementById("message").appendChild(inputElement);
     document.getElementById("message").appendChild(download);
 }
-
-// function download() {
-    
-// }

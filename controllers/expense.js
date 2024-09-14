@@ -3,14 +3,31 @@ const Users = require('../models/users');
 const Expense = require('../models/expense');
 const bcrypt = require('bcrypt');
 const sequelize = require('../util/database');
-const AWS = require('aws-sdk');
-
-
+const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
 
 const getExpense = async (req, res) => {
+    const page = +req.query.page || 1;
+    const ItemPerPage = 2;
     try {
-        const expenses = await Expense.findAll({where : {userId : req.user.id}});
-        return res.status(200).json(expenses);
+        const totalItems = await Expense.count({where : {userId : req.user.id}});
+
+        const expenses = await Expense.findAll({
+            where : {userId : req.user.id},
+            offset : (page - 1) * ItemPerPage,
+            limit : ItemPerPage
+        });
+
+        const pageData = {
+            totalItems : totalItems,
+            currentPage : page,
+            hasPrevPage : page > 1,
+            prevPage : page - 1,
+            hasNextPage : (ItemPerPage * page) < totalItems,
+            nextPage : page + 1,
+            lastPage : Math.ceil(totalItems/ItemPerPage)
+        }
+        return res.status(200).json({expenses, pageData});
+
     } catch (err) {
         console.log(err);
         return res.status(500).json({ message: 'Server error' });
@@ -79,7 +96,7 @@ function uploadToS3(data, filename) {
     const IAM_USER_ACCESS_KEY = 'AKIAU6VTTSFC6TROJK4Z';
     const IAM_USER_SECRET_KEY = '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';
 
-    let s3bucket = new AWS.S3({
+    let s3bucket = new S3Client({
         accessKeyId : IAM_USER_ACCESS_KEY,
         secretAccessKey : IAM_USER_SECRET_KEY,
         region : 'us-east-1'
@@ -91,9 +108,9 @@ function uploadToS3(data, filename) {
         Body : data,
         ACL : 'public-read'
     };
-    
+    const command = new PutObjectCommand(params);
     return new Promise((resolve, reject) => {
-        s3bucket.upload(params, (err,s3response) => {
+        s3bucket.send(command, (err,s3response) => {
             if(err) {
                 console.log('Something went wrong', err);
                 reject(err);
