@@ -280,7 +280,37 @@ li.expense-item {
     width: 150px;
     text-align: center;
 }
+/* General styling for the select dropdown */
 
+#item-per-page {
+    width: 50px;
+    padding: 8px;
+    font-size: 14px;
+    background-color: #f4f4f4;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
+    appearance: none; /* Removes the default OS styling */
+    cursor: pointer;
+    transition: border-color 0.3s ease-in-out;
+}
+
+/* Styling for the dropdown when focused */
+#item-per-page:focus {
+    outline: none;
+    border-color: rgb(14, 90, 253);
+}
+
+/* Styling for the options */
+#item-per-page option {
+    padding: 10px;
+    font-size: 14px;
+}
+
+/* Hover effect on select */
+#item-per-page:hover {
+    border-color: rgb(14, 90, 253);
+}
 
 /* leaderboard.css */
 

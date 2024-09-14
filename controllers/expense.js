@@ -7,7 +7,7 @@ const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
 
 const getExpense = async (req, res) => {
     const page = +req.query.page || 1;
-    const ItemPerPage = 2;
+    const ItemPerPage = +req.query.limit || 2;
     try {
         const totalItems = await Expense.count({where : {userId : req.user.id}});
 
@@ -153,7 +153,7 @@ const downloadFile = async (req, res) => {
     try {
         const expenses = await Expense.findAll({where : {userId : req.user.id}});
         // console.log(expenses);
-        const currentTime = parseInt(new Date());
+        const currentTime = JSON.stringify(new Date());
         const stringifiedExpenses = JSON.stringify(expenses);
         const fileName = `Expenses-${req.user.id}-data/${currentTime}.txt`;
         const fileUrl = await uploadToS3(stringifiedExpenses, fileName);

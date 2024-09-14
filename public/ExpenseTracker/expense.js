@@ -1,20 +1,18 @@
 const expenseForm = document.querySelector(".expense-form");
-
 const listOfItems = document.getElementById("list-of-items");
 
 let listOfExpense = [];
+let currentPage = 1;  // Track the current page
+let itemsPerPage = document.getElementById('item-per-page').value; // Track the items per page
 
 const port = 3450;
-
-let currentPage = 1;  // Track the current page
-const itemsPerPage = 2; // Track the items in a page
 
 document.addEventListener('DOMContentLoaded', async function(event) {
     event.preventDefault();
     try {
         const token = localStorage.getItem('token');
         const decodeToken = parseJwt(token);
-        console.log(decodeToken)
+        console.log(decodeToken);
         const ispremiumuser = decodeToken.isPremium;
 
         await getExpense(currentPage);
@@ -23,7 +21,6 @@ document.addEventListener('DOMContentLoaded', async function(event) {
             showPremiumUserMessage();
             showLeaderBoard();
         }
-
     } catch (error) {
         console.log('Error fetching expenses: ', error);
     }
@@ -31,8 +28,8 @@ document.addEventListener('DOMContentLoaded', async function(event) {
 
 async function getExpense(page) {
     const token = localStorage.getItem('token');
-    try{
-        const response = await axios.get(`http://localhost:${port}/expense/get-expenses?page=${page}`, { headers: { 'Authorization': token } });
+    try {
+        const response = await axios.get(`http://localhost:${port}/expense/get-expenses?page=${page}&limit=${itemsPerPage}`, { headers: { 'Authorization': token } });
         listOfExpense = response.data.expenses;
         pageInfo = response.data.pageData;
 
@@ -41,9 +38,7 @@ async function getExpense(page) {
         await showPagination(pageInfo);
 
         await renderExpense();
-
-    }
-    catch(err) {
+    } catch (err) {
         console.log('Error on fetching data : ', err);
     }
 }
@@ -51,41 +46,29 @@ async function getExpense(page) {
 expenseForm.addEventListener('submit', async(event) => {
     event.preventDefault();
     const expenseDetails = {
-        title : document.getElementById('title').value,
-        category : document.getElementById('category').value,
-        amount : document.getElementById('amount').value,
-        details : document.getElementById('details').value
-    }
+        title: document.getElementById('title').value,
+        category: document.getElementById('category').value,
+        amount: document.getElementById('amount').value,
+        details: document.getElementById('details').value
+    };
   
-    try{
+    try {
         const token = localStorage.getItem('token');
-        const response = await axios.post(`http://localhost:${port}/expense/add-expense`, expenseDetails, { headers : {'Authorization' : token} });
+        const response = await axios.post(`http://localhost:${port}/expense/add-expense`, expenseDetails, { headers: { 'Authorization': token } });
 
         console.log(response.data); // Check the structure of the returned data
 
-        if (listOfExpense.length >= itemsPerPage) {
-            // Check if adding a new expense exceeds the page limit
-            const totalItems = pageInfo.totalItems + 1;
-            if (totalItems % itemsPerPage === 1) {
-                // If totalItems is a multiple of itemsPerPage + 1, we are on the last page
-                currentPage = 1; // Move to first page
-            }
-        }
-
-        await getExpense(currentPage); // Fetch expenses for the new page
+        // Refresh the expense list
+        await getExpense(currentPage);
 
         document.getElementById('title').value = "";
         document.getElementById('amount').value = "";
         document.getElementById('category').value = "";
         document.getElementById('details').value = "";
-
-        renderExpense();
-    }
-    catch(err){
-        comsole.log(err);
+    } catch (err) {
+        console.log(err);
     }
 });
-
 
 async function deleteExpense(index) {
     const expense = listOfExpense[index];
@@ -94,7 +77,7 @@ async function deleteExpense(index) {
     try {
         await axios.delete(`http://localhost:${port}/expense/delete-expense/${expense.id}`);
         listOfExpense.splice(index, 1);
-        
+
         // Adjust currentPage if deleting an item on the last page and it's empty now
         if (listOfExpense.length === 0 && currentPage > 1) {
             currentPage -= 1;
@@ -116,12 +99,10 @@ async function editExpense(index) {
 
         await deleteExpense(index);
         await getExpense(currentPage);
-
     } catch (error) {
         console.error('Error editing expense:', error);
     }
 }
-
 
 document.getElementById('rzp-button').onclick = async function (event) {
     event.preventDefault();  // Prevent default action of the button
@@ -143,11 +124,10 @@ document.getElementById('rzp-button').onclick = async function (event) {
 
                     console.log(res);
                     alert('You are a Premium User now');
-                    document.getElementById('rzp-button').style.visibility = "hidden"
-                    document.getElementById('message').style.visibility = "visible"
-                    localStorage.setItem('token', res.data.token)
+                    document.getElementById('rzp-button').style.visibility = "hidden";
+                    document.getElementById('message').style.visibility = "visible";
+                    localStorage.setItem('token', res.data.token);
                     showLeaderBoard();
-
                 } catch (error) {
                     alert('Error updating transaction status');
                     console.log(error);
@@ -175,26 +155,25 @@ async function showPagination(pageObj) {
         const nextPage = pageObj.nextPage;
 
         if (pageObj.hasPrevPage) {
-            document.getElementById('prev-page').onclick = () => getExpense(prevPage); // function gets called inside onclicked function
+            document.getElementById('prev-page').onclick = () => getExpense(prevPage);
             document.getElementById('prev-page').style.visibility = 'visible';
         } else {
             document.getElementById('prev-page').style.visibility = 'hidden';
         }
 
         if (pageObj.hasNextPage) {
-            document.getElementById('next-page').onclick = () => getExpense(nextPage); // function gets called inside onclicked function
+            document.getElementById('next-page').onclick = () => getExpense(nextPage);
             document.getElementById('next-page').style.visibility = 'visible';
         } else {
             document.getElementById('next-page').style.visibility = 'hidden';
         }
 
-        document.getElementById('curr-page').onclick = () => getExpense(currentPage); // function gets called inside onclicked function
+        document.getElementById('curr-page').onclick = () => getExpense(currentPage);
         document.getElementById('currentPageDisplay').textContent = `${currentPage}`;
     } catch (err) {
-        console.log('error on fetching the list : ', err);
+        console.log('Error on pagination: ', err);
     }
 }
-
 
 async function renderExpense() {
     try {
@@ -216,7 +195,7 @@ async function renderExpense() {
             expenseList.appendChild(expenseItem);
         });
     } catch (err) {
-        console.log('error on fetching the list : ', err);
+        console.log('Error rendering expense: ', err);
     }
 }
 
@@ -236,34 +215,33 @@ function showPremiumUserMessage() {
 }
 
 function showLeaderBoard() {
-    const inputElement = document.createElement('input')
+    const inputElement = document.createElement('input');
     inputElement.className = 'show-leaderboard-button';
-    inputElement.type = 'button'
-    inputElement.value = 'Show Leaderboard'
+    inputElement.type = 'button';
+    inputElement.value = 'Show Leaderboard';
     
-    const download = document.createElement('input')
+    const download = document.createElement('input');
     download.className = 'download-content';
-    download.type = 'button'
-    download.value = 'download-file'
+    download.type = 'button';
+    download.value = 'Download File';
     
-    inputElement.onclick = async() => {
-        const token = localStorage.getItem('token')
-        const userLeaderBoardArray = await axios.get(`http://localhost:${port}/premium/showLeaderBoard`, { headers: {"Authorization" : token} })
-        console.log(userLeaderBoardArray)
+    inputElement.onclick = async () => {
+        const token = localStorage.getItem('token');
+        const userLeaderBoardArray = await axios.get(`http://localhost:${port}/premium/showLeaderBoard`, { headers: {"Authorization" : token} });
+        console.log(userLeaderBoardArray);
 
-        var leaderboardElem = document.getElementById('list-of-expenses')
-        
+        var leaderboardElem = document.getElementById('list-of-expenses');
         leaderboardElem.innerHTML = '';    // Clear the previous leaderboard content
 
         let i = 1;
-        leaderboardElem.innerHTML += '<h1> Leader Board </h1>'
+        leaderboardElem.innerHTML += '<h1> Leader Board </h1>';
         userLeaderBoardArray.data.forEach((userDetails) => {
             leaderboardElem.innerHTML += `<li class="items-list"> ${i}. Name - ${userDetails.username} --- & --- Total Expense - ${userDetails.totalExpense}</li>`;
             i = i + 1;
-        })
+        });
     }
 
-    download.onclick = async() => {
+    download.onclick = async () => {
         const token = localStorage.getItem('token');
         await axios.get(`http://localhost:${port}/expense/download`, { headers: {"Authorization" : token} })
         .then((response) => {
@@ -273,14 +251,20 @@ function showLeaderBoard() {
                 a.download = 'myexpense.csv';
                 a.click();
             } else {
-                throw new Error(response.data.error)
+                throw new Error(response.data.error);
             }
         })
         .catch((err) => {
-            showError(err)
+            showError(err);
         });
     }
 
     document.getElementById("message").appendChild(inputElement);
     document.getElementById("message").appendChild(download);
 }
+
+// Event listener for the items-per-page dropdown
+document.getElementById('item-per-page').addEventListener('change', function() {
+    itemsPerPage = this.value;
+    getExpense(currentPage); // Fetch expenses with the updated limit
+});
