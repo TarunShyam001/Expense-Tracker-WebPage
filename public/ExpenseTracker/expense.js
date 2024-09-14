@@ -6,6 +6,10 @@ let listOfExpense = [];
 
 const port = 3450;
 
+const currentPage = 1;  //initiate the starting page conditions
+const totalPage = 0; //initiates the starting page conditions
+const limit = 4; //initiates the limits a page can show
+
 expenseForm.addEventListener('submit', async(event) => {
     event.preventDefault();
     const expenseDetails = {
@@ -69,24 +73,53 @@ async function editExpense(index) {
 
 document.addEventListener('DOMContentLoaded', async function(event) {
     event.preventDefault();
-    try {
-        const token = localStorage.getItem('token');
-        const decodeToken = parseJwt(token);
-        console.log(decodeToken)
-        const ispremiumuser = decodeToken.isPremium;
-        if(ispremiumuser) {
-            showPremiumUserMessage();
-            showLeaderBoard();
-        }
 
-        const response = await axios.get(`http://localhost:${port}/expense/get-expenses`, { headers: { 'Authorization': token } });
-        listOfExpense = response.data;
-        renderExpense(); // Make sure this is called after successfully fetching expenses
-
-    } catch (error) {
-        console.log('Error fetching expenses: ', error);
+    const token = localStorage.getItem('token');
+    const decodeToken = parseJwt(token);
+    console.log(decodeToken)
+    const ispremiumuser = decodeToken.isPremium;
+    if(ispremiumuser) {
+        showPremiumUserMessage();
+        showLeaderBoard();
     }
+
+    await getPage(currentPage);
 });
+
+async function getPage(page) {
+    if (page < 1 || (totalPage && page > totalPage)) {
+        return;
+    }
+    const token = localStorage.getItem('token');
+
+    try {
+        const res = await axios.get(`http://localhost:${port}/expense/get-expenses?page=${page}&limit=${limit}`, 
+            { headers: { 'Authorization': token } });
+
+        console.log(res.data);  // Check the response
+
+        const data = res.data;
+        listOfExpense = data.expenses;  // Assign paginated expenses
+
+        // update the pagination variables
+        currentPage = data.currentPage;
+        totalPage = data.totalPage;
+
+        renderExpense();  // Re-render expenses
+
+        // Update pagination UI
+        document.getElementById('currentPageDisplay').textContent = currentPage;
+        document.getElementById('totalPagesDisplay').textContent = totalPage;
+
+        // Enable/disable pagination buttons based on the current page
+        document.getElementById('prevPage').disabled = currentPage === 1;
+        document.getElementById('nextPage').disabled = currentPage === totalPage;
+
+    } catch (err) {
+        console.log('Error on fetching Expenses: ', err);
+    }
+}
+
 
 document.getElementById('rzp-button').onclick = async function (event) {
     event.preventDefault();  // Prevent default action of the button
@@ -134,6 +167,7 @@ document.getElementById('rzp-button').onclick = async function (event) {
 }
 
 function renderExpense() {
+    const dataList = document.getElementById('data-list-01');
     const expenseList = document.getElementById("list-of-items");
     expenseList.innerHTML = ''; // Clear the existing list
 
@@ -151,6 +185,16 @@ function renderExpense() {
         `;
         expenseList.appendChild(expenseItem);
     });
+    const div = document.createElement('div');
+    div.id = 'pagination';
+
+    div.innerHTML = `
+        <button id="prevPage" onclick="getPage(${currentPage - 1})">Previous</button>
+        <span>Page <span id="currentPageDisplay"></span> of <span id="totalPagesDisplay"></span></span>
+        <button id="nextPage" onclick="getPage(${currentPage + 1})">Next</button> `;
+
+    dataList.appendChild(div);
+    
 }
 
 function parseJwt(token) {
@@ -217,7 +261,3 @@ function showLeaderBoard() {
     document.getElementById("message").appendChild(inputElement);
     document.getElementById("message").appendChild(download);
 }
-
-// function download() {
-    
-// }
