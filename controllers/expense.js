@@ -91,46 +91,71 @@ const postAddExpense = async (req, res) => {
     }
 };
 
-function uploadToS3(data, filename) {
-    const BUCKET_NAME = 'expensetracking123';
-    const IAM_USER_ACCESS_KEY = 'AKIAU6VTTSFC6TROJK4Z';
-    const IAM_USER_SECRET_KEY = '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';
-
-    let s3bucket = new S3Client({
-        accessKeyId : IAM_USER_ACCESS_KEY,
-        secretAccessKey : IAM_USER_SECRET_KEY,
-        region : 'us-east-1'
-    })
+async function uploadToS3(data, filename) {
+    try{
+        const BUCKET_NAME = 'expensetracking123';
+        const IAM_USER_ACCESS_KEY = 'AKIAU6VTTSFC6TROJK4Z';
+        const IAM_USER_SECRET_KEY = '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';
     
-    var params = {
-        Bucket : BUCKET_NAME,
-        Key : filename,
-        Body : data,
-        ACL : 'public-read'
-    };
-    const command = new PutObjectCommand(params);
-    return new Promise((resolve, reject) => {
-        s3bucket.send(command, (err,s3response) => {
-            if(err) {
-                console.log('Something went wrong', err);
-                reject(err);
-            } else {
-                console.log('success : ', s3response);
-                resolve(s3response.Location);
+        const s3Region = 'us-east-1'
+        const s3 = new S3Client({
+            region: s3Region,
+            credentials: {
+                accessKeyId: IAM_USER_ACCESS_KEY,
+                secretAccessKey: IAM_USER_SECRET_KEY,
             }
-        })
+        });
+    
+        const params = {
+            Bucket: BUCKET_NAME,
+            Key: filename,
+            Body: data,
+            ACL: 'public-read'
+        };
+    
+        const command = new PutObjectCommand(params);
+    
+        return s3.send(command)
+            .then(() => {
+                // Construct the file URL using bucket name and filename
+                const fileUrl = `https://${BUCKET_NAME}.s3.amazonaws.com/${filename}`;
+                console.log('file url : ', fileUrl);
+                return fileUrl;
+            })
+            .catch(err => {
+                console.log('Error uploading file:', err);
+                throw err;
+            });
 
-    })
-
+    } catch  (err) {
+        console.log('Error uploading file:', err);
+        throw err;
+    }
 }
+
+
+    // return new Promise((resolve, reject) => {
+    //     s3bucket.send(command, (err,s3response) => {
+    //         if(err) {
+    //             console.log('Something went wrong', err);
+    //             reject(err);
+    //         } else {
+    //             console.log('success : ', s3response);
+    //             resolve(s3response.Location);
+    //         }
+    //     })
+
+    // })
+
+// }
 
 const downloadFile = async (req, res) => {
     try {
         const expenses = await Expense.findAll({where : {userId : req.user.id}});
         // console.log(expenses);
-    
+        const currentTime = parseInt(new Date());
         const stringifiedExpenses = JSON.stringify(expenses);
-        const fileName = `Expenses-${req.user.id}-data/${new Date()}.txt`;
+        const fileName = `Expenses-${req.user.id}-data/${currentTime}.txt`;
         const fileUrl = await uploadToS3(stringifiedExpenses, fileName);
         return res.status(201).json({ fileUrl, success : true});
     } catch(err) {
