@@ -6,30 +6,16 @@ const sequelize = require('../util/database');
 const AWS = require('aws-sdk');
 
 
+
 const getExpense = async (req, res) => {
-    const page = parseInt(req.query.page); // Get the current page from the query parameter, default is page 1
-    const limit = parseInt(req.query.limit); // Get the limit (number of items per page), default is 4
-    const offset = (page - 1) * limit; // Calculate the offset (skip this many items)
-
     try {
-        const {count, rows} = await Expense.findAndCountAll({
-            where: { userId: req.user.id },
-            limit: limit,
-            offset: offset
-        });
-
-        return res.status(200).json({
-            totalItems: count,            // Total number of records
-            currentPage: page,            // The current page
-            totalPage: Math.ceil(count / limit),  // Total number of pages
-            expenses: rows                // The paginated expenses
-        });
+        const expenses = await Expense.findAll({where : {userId : req.user.id}});
+        return res.status(200).json(expenses);
     } catch (err) {
         console.log(err);
         return res.status(500).json({ message: 'Server error' });
     }
 };
-
 
 const postAddExpense = async (req, res) => {
     const t = await sequelize.transaction();
