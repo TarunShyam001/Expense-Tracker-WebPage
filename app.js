@@ -1,5 +1,5 @@
 const dotenv = require('dotenv');
-dotenv.config();
+dotenv.config({path : './Expense-Tracker-WebPage/.env'});
 
 const express = require('express');
 const app = express();
@@ -44,7 +44,7 @@ sequelize
 .sync()
 .then((result) => {
     console.log(`server is working on http://localhost:${port}`);
-   app.listen(3000);
+   app.listen(port);
 }).catch((err) => {
     console.log(err)
 });
