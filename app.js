@@ -2,6 +2,7 @@ const dotenv = require('dotenv');
 dotenv.config({path : './Expense-Tracker-WebPage/.env'});
 
 const express = require('express');
+const helmet = require('helmet');
 const app = express();
 
 const sequelize = require ('./util/database');
@@ -30,6 +31,7 @@ Order.belongsTo(Users);
 Users.hasMany(ForgetPassword);
 ForgetPassword.belongsTo(Users);
 
+app.use(helmet());
 app.use('/user', userRoutes);
 app.use('/expense', expenseRoutes);
 app.use('/purchase', purchaseRoutes);
