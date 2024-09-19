@@ -1,10 +1,16 @@
 const dotenv = require('dotenv');
 dotenv.config({path : './Expense-Tracker-WebPage/.env'});
 
+const path = require('path');
+const fs = require('fs');
 const express = require('express');
 const helmet = require('helmet');
 const compression = require('compression');
+const morgan = require('morgan');
 const app = express();
+
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
 
 const sequelize = require ('./util/database');
 
@@ -32,8 +38,11 @@ Order.belongsTo(Users);
 Users.hasMany(ForgetPassword);
 ForgetPassword.belongsTo(Users);
 
+const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags : 'a'});
+
 app.use(helmet());
 app.use(compression());
+app.use(morgan('combined', {stream : accessLogStream}));
 
 app.use('/user', userRoutes);
 app.use('/expense', expenseRoutes);
