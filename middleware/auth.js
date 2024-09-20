@@ -10,7 +10,7 @@ const authorization = async (req, res, next) => {
         }
 
         // Decode the JWT token
-        const user = jwt.verify(token, 'chysde4ths#5s647udumsnkff9823094mflksdmfs$ui#fjkljf');
+        const user = jwt.verify(token, process.env.TOKEN_SECRET);
         console.log(user);
 
         // Find the user by userId extracted from the token

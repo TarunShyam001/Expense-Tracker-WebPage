@@ -1,5 +1,6 @@
 const dotenv = require('dotenv');
-dotenv.config({path : './Expense-Tracker-WebPage/.env'});
+dotenv.config();
+// dotenv.config({path : './Expense-Tracker-WebPage/.env'}); // when running the app via npm start 
 
 const path = require('path');
 const fs = require('fs');
@@ -8,9 +9,6 @@ const helmet = require('helmet');
 const compression = require('compression');
 const morgan = require('morgan');
 const app = express();
-
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
 
 const sequelize = require ('./util/database');
 
