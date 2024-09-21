@@ -1,6 +1,6 @@
 const dotenv = require('dotenv');
-dotenv.config();
-// dotenv.config({path : './Expense-Tracker-WebPage/.env'}); // when running the app via npm start 
+// dotenv.config(); // when running the app via "npm start" 
+dotenv.config({path : './Expense-Tracker-WebPage/.env'}); // when running with simple "run command"
 
 const path = require('path');
 const fs = require('fs');
