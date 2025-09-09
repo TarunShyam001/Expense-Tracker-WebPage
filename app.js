@@ -5,8 +5,6 @@ dotenv.config({path : './Expense-Tracker-WebPage/.env'}); // when running with s
 const path = require('path');
 const fs = require('fs');
 const express = require('express');
-const helmet = require('helmet');
-const compression = require('compression');
 const morgan = require('morgan');
 const app = express();
 
@@ -38,8 +36,6 @@ ForgetPassword.belongsTo(Users);
 
 const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags : 'a'});
 
-app.use(helmet());
-app.use(compression());
 app.use(morgan('combined', {stream : accessLogStream}));
 
 app.use('/user', userRoutes);
@@ -54,9 +50,9 @@ const port = process.env.PORT;
 
 sequelize
 .sync()
-.then((result) => {
+.then(() => {
     console.log(`server is working on http://localhost:${port}`);
-   app.listen(port);
+    app.listen(port);
 }).catch((err) => {
     console.log(err)
 });

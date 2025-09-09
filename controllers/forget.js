@@ -31,7 +31,7 @@ const forgotpassword = async (req, res) => {
 
             // Fill in the email details
             sendSmtpEmail.subject = 'Reset Password Request';
-            sendSmtpEmail.htmlContent = `<p>Click the link below to reset your password.</p><a href="http://localhost:${port}/password/resetpassword/${id}">Reset password</a>`;
+            sendSmtpEmail.htmlContent = `<p>Click the link below to reset your password.</p><a href="localhost:${port}/password/resetpassword/${id}">Reset password</a>`;
             sendSmtpEmail.sender = { name: 'Tarun Shyam', email: 'shyamtarun2001@gmail.com' };
             sendSmtpEmail.to = [{ email }];
             // Add any other necessary email fields here (cc, bcc, replyTo, headers, etc.)
@@ -93,24 +93,18 @@ const updatepassword = (req, res) => {
                 if (user) {
                     // Encrypt the new password
                     const saltRounds = 10;
-                    bcrypt.genSalt(saltRounds, function(err, salt) {
+                    bcrypt.hash(newpassword, saltRounds, function(err, hash) {
                         if (err) {
                             console.error(err);
                             throw new Error(err);
                         }
-                        bcrypt.hash(newpassword, salt, function(err, hash) {
-                            if (err) {
-                                console.error(err);
-                                throw new Error(err);
-                            }
-                            user.update({ password: hash })
-                            .then(() => {
-                                res.status(201).json({ message: 'Successfully updated the new password' });
-                            })
-                            .catch(error => {
-                                console.error(error);
-                                throw new Error(error);
-                            });
+                        user.update({ password: hash })
+                        .then(() => {
+                            res.status(201).json({ message: 'Successfully updated the new password' });
+                        })
+                        .catch(error => {
+                            console.error(error);
+                            throw new Error(error);
                         });
                     });
                 } else {

@@ -189,6 +189,7 @@ async function renderExpense() {
                 <h4 class="exp-amount">Rs.${expense.amount}/-</h4>
                 <h4 class="exp-category">${expense.category}</h4>
                 <p class="exp-details">${expense.details}</p>
+                <p class="exp-date">${expense.dateOfExpense}</p>
                 <button onclick="editExpense(${index})" class="edit-btn">Edit</button>
                 <button onclick="deleteExpense(${index})" class="delete-btn">Delete</button>
             `;
